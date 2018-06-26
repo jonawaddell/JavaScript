@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+</style>
+</head>
+<body>
+
+
+<input type="text" class="form-control" id="datetime" placeholder="Date/Time 'm/d/yyyy'">
+<input type="text" class="form-control" id="state" placeholder="State Abbreviation">
+<a id="search" class="btn btn-default">Search</a>
+<tbody>
+<thead>
+<table style="width:100%">
+  <caption>JavaScript and DOM Manipulation</caption>
+  <tr>
+    <th>date/time</th>
+    <th>city</th>
+    <th>state</th>
+    <th>country</th>
+    <th>shape</th>
+    <th>comment</th>
+  </tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script type="text/javascript" src="data.js"></script>
+<script>
+// Get references to the tbody element, input field and button
+var $tbody = document.querySelector("tbody");
+var $dateInput = document.querySelector("#datetime");
+var $stateInput = document.querySelector("#state")
+var $searchBtn = document.querySelector("#search");
+
+// Add an event listener to the searchButton, call handleSearchButtonClick when clicked
+$searchBtn.addEventListener("click", handleSearchButtonClick);
+
+// Set filteredUFO to addressData initially
+var filteredUFO = dataSet;
+
+// renderTable renders the filteredUFO to the tbody
+function renderTable() {
+  $tbody.innerHTML = "";
+  console.log("render is happening")
+
+  for (var i = 0; i < filteredUFO.length; i++) {
+    
+    // Get get the current sighting object and its fields
+    var sighting = filteredUFO[i];
+    var fields = Object.keys(sighting);
+    // Create a new row in the tbody, set the index to be i + startingIndex
+    var $row = $tbody.insertRow(i);
+    for (var j = 0; j < fields.length; j++) {
+      //  create a new cell at set its inner text to be the current value at the current address's field
+      var field = fields[j];
+      var $cell = $row.insertCell(j);
+      $cell.innerText = sighting[field];
+    }
+  }
+}
+
+function handleSearchButtonClick() {
+// Format the user's search 
+  var filterDate = $dateInput.value.trim();
+  var filterState = $stateInput.value.trim().toLowerCase();
+
+  if (filterDate.length != 0){
+    filteredUFO = dataSet.filter(function(sighting) {
+      var sightingDate = sighting.datetime;
+       return sightingDate === filterDate;
+         });
+  }
+  else {
+    filteredUFO = dataSet
+  }
+  if (filterState.length != 0){
+    filteredUFO = filteredUFO.filter(function(sighting) {
+      var sightingState = sighting.state;
+       return sightingState === filterState;
+         });
+  }
+  else {
+    filteredUFO = filteredUFO
+  }
+  renderTable();
+}
+
+renderTable();
+</script>
+</body>
+</html>
